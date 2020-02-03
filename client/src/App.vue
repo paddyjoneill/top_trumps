@@ -22,11 +22,18 @@ export default {
       cards: [],
       deckDescriptions: [],
       gameOptionsSelected: false,
-      gameType: ''
+      gameType: '',
+      countries: [],
+      countriesObject: {name: 'Countries',
+                        deckImageURL: '',
+                        deck: [],
+                        descriptions: {}
+                  }
     }
   },
   mounted(){
     this.fetchDecks()
+    this.fetchCountries()
 
     // gets the game options and saves them so can be sent down as props
     eventBus.$on('game-options-selected', (payload) => {
@@ -51,6 +58,32 @@ export default {
     fetchDecks() {
       CardDecksService.getDecks()
       .then(decks => this.decks = decks)
+    },
+
+    fetchCountries() {
+      fetch("https://restcountries.eu/rest/v2/all")
+      .then(response => response.json())
+      .then(countries => {
+        this.countries = countries.slice(0,30)
+      } )
+      .then(banana => this.putCountriesIntoDecks())
+    },
+
+    putCountriesIntoDecks() {
+      this.countries.forEach((country, index) => {
+        let object = {}
+        object.name = country.name
+        object.imageURL = country.flag
+        let playableProps = {}
+        playableProps.population = country.population
+        playableProps.borders = country.borders.length
+        playableProps.languages = country.languages.length
+        object.playableProperties = playableProps
+        this.countriesObject.descriptions = {population: 'Population', languages: 'Number of Languages', borders: 'Number of Borders'}
+        this.countriesObject.deck[index] = object
+
+      });
+        this.decks.push(this.countriesObject)
     }
   }
 };
