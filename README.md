@@ -1,6 +1,6 @@
 Top Trumps Card Game - Vue.js/express/MongoDB
 
-http://trumpsjavascript.herokuapp.com
+https://toptrumpsjavascript.herokuapp.com/
 
 Group Project at Code Clan Edinburgh using Vue.js for the front end and express/MongoDB for the backend.
 
